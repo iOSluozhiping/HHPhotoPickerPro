@@ -1,4 +1,4 @@
-# 和缓最新相册选择器接入文档
+# 仿微信相册选择器接入文档
 
 # 1,使用pod方式集成：
     pod "HHPhotoPickerPro_github"
