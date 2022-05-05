@@ -1,0 +1,1286 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5.1 (swiftlang-1300.0.31.4 clang-1300.0.29.6)
+// swift-module-flags: -target arm64-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HHPhotoPicker
+import AVFoundation
+import Accelerate
+import CoreMotion
+import Foundation
+@_exported import HHPhotoPicker
+import Photos
+import PhotosUI
+import Swift
+import UIKit
+import _Concurrency
+public protocol HHPhotoPickerManagerDelegate {
+  func selectImage(_ selectedImages: [UIKit.UIImage])
+  func cancelImage()
+  func selectImageRequestError(_ errorAssets: [Photos.PHAsset], errorIndexs: [Swift.Int])
+}
+@objc public class HHPhotoPickerManager : ObjectiveC.NSObject {
+  public var viewDelegate: HHPhotoPicker.HHPhotoPickerManagerDelegate?
+  public var photoConfigModel: HHPhotoPicker.HHPhotoConfigModel
+  public var photoUIConfigModel: HHPhotoPicker.HHPhotoUIConfigModel
+  required public init(showVC: UIKit.UIViewController)
+  public func showImagePicker()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class HHPhotoConfigModel : ObjectiveC.NSObject {
+  public var maxPreviewCount: Swift.Int
+  public var maxSelectCount: Swift.Int {
+    get
+    set
+  }
+  public var minVideoSelectCount: Swift.Int {
+    get
+    set
+  }
+  public var maxVideoSelectCount: Swift.Int {
+    get
+    set
+  }
+  public var minSelectVideoDuration: Swift.Int
+  public var maxSelectVideoDuration: Swift.Int
+  public var cellCornerRadio: CoreGraphics.CGFloat
+  public var languageType: HHPhotoPicker.ZLLanguageType {
+    get
+    set
+  }
+  public var columnCount: Swift.Int {
+    get
+    set
+  }
+  public var sortAscending: Swift.Bool
+  public var allowSelectImage: Swift.Bool
+  public var allowTakePhotoInLibrary: Swift.Bool
+  public var allowSelectOriginal: Swift.Bool
+  public var allowSelectGif: Swift.Bool
+  public var allowSelectVideo: Swift.Bool
+  public var allowSelectLivePhoto: Swift.Bool
+  public var allowEditImage: Swift.Bool
+  public var allowMixSelect: Swift.Bool
+  public var allowPreviewPhotos: Swift.Bool
+  public var editImageWithDraw: Swift.Bool
+  public var editImageWithClip: Swift.Bool
+  public var editImageWithImageSticker: Swift.Bool
+  public var editImageWithTextSticker: Swift.Bool
+  public var editImageWithMosaic: Swift.Bool
+  public var editImageWithFilter: Swift.Bool
+  public var editImageWithAdjust: Swift.Bool
+  public var editImageWitAdjustBrightness: Swift.Bool
+  public var editImageWitAdjustContrast: Swift.Bool
+  public var editImageWitAdjustSaturation: Swift.Bool
+  public var shouldAnialysisAsset: Swift.Bool
+  public var allowEditVideo: Swift.Bool {
+    get
+    set
+  }
+  public var saveNewImageAfterEdit: Swift.Bool
+  public var allowDragSelect: Swift.Bool
+  public var allowSlideSelect: Swift.Bool
+  public var autoScrollWhenSlideSelectIsActive: Swift.Bool
+  public var autoScrollMaxSpeed: CoreGraphics.CGFloat
+  public var showCaptureImageOnTakePhotoBtn: Swift.Bool
+  public var showSelectedIndex: Swift.Bool
+  public var showSelectedMask: Swift.Bool
+  public var showSelectedBorder: Swift.Bool
+  public var showInvalidMask: Swift.Bool
+  public var useCustomCamera: Swift.Bool
+  public var flashMode: HHPhotoPicker.ZLCameraConfiguration.FlashMode
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class HHPhotoUIConfigModel : ObjectiveC.NSObject {
+  public var style: HHPhotoPicker.ZLPhotoBrowserStyle
+  public var bottomToolViewBtnNormalBgColor: UIKit.UIColor
+  public var bottomToolViewBtnNormalBgColorOfPreviewVC: UIKit.UIColor
+  @objc public var indexLabelBgColor: UIKit.UIColor
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class ZLAlbumListModel : ObjectiveC.NSObject {
+  final public let title: Swift.String
+  public var count: Swift.Int {
+    get
+  }
+  public var result: Photos.PHFetchResult<Photos.PHAsset>
+  final public let collection: Photos.PHAssetCollection
+  final public let option: Photos.PHFetchOptions
+  final public let isCameraRoll: Swift.Bool
+  public var headImageAsset: Photos.PHAsset? {
+    get
+  }
+  public var models: [HHPhotoPicker.ZLPhotoModel]
+  public init(title: Swift.String, result: Photos.PHFetchResult<Photos.PHAsset>, collection: Photos.PHAssetCollection, option: Photos.PHFetchOptions, isCameraRoll: Swift.Bool)
+  public func refetchPhotos()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class ZLCameraConfiguration : ObjectiveC.NSObject {
+  @objc public enum CaptureSessionPreset : Swift.Int {
+    case cif352x288
+    case vga640x480
+    case hd1280x720
+    case hd1920x1080
+    case hd4K3840x2160
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public enum FocusMode : Swift.Int {
+    case autoFocus
+    case continuousAutoFocus
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public enum ExposureMode : Swift.Int {
+    case autoExpose
+    case continuousAutoExposure
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public enum FlashMode : Swift.Int {
+    case auto
+    case on
+    case off
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public enum VideoExportType : Swift.Int {
+    case mov
+    case mp4
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public var sessionPreset: HHPhotoPicker.ZLCameraConfiguration.CaptureSessionPreset
+  @objc public var focusMode: HHPhotoPicker.ZLCameraConfiguration.FocusMode
+  @objc public var exposureMode: HHPhotoPicker.ZLCameraConfiguration.ExposureMode
+  @objc public var flashMode: HHPhotoPicker.ZLCameraConfiguration.FlashMode
+  @objc public var videoExportType: HHPhotoPicker.ZLCameraConfiguration.VideoExportType
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HHPhotoPicker.ZLCameraConfiguration {
+  @discardableResult
+  public func sessionPreset(_ sessionPreset: HHPhotoPicker.ZLCameraConfiguration.CaptureSessionPreset) -> HHPhotoPicker.ZLCameraConfiguration
+  @discardableResult
+  public func focusMode(_ mode: HHPhotoPicker.ZLCameraConfiguration.FocusMode) -> HHPhotoPicker.ZLCameraConfiguration
+  @discardableResult
+  public func exposureMode(_ mode: HHPhotoPicker.ZLCameraConfiguration.ExposureMode) -> HHPhotoPicker.ZLCameraConfiguration
+  @discardableResult
+  public func flashMode(_ mode: HHPhotoPicker.ZLCameraConfiguration.FlashMode) -> HHPhotoPicker.ZLCameraConfiguration
+  @discardableResult
+  public func videoExportType(_ type: HHPhotoPicker.ZLCameraConfiguration.VideoExportType) -> HHPhotoPicker.ZLCameraConfiguration
+}
+@objc @_Concurrency.MainActor(unsafe) open class ZLCustomCamera : UIKit.UIViewController, QuartzCore.CAAnimationDelegate {
+  @objc @_Concurrency.MainActor(unsafe) public var takeDoneBlock: ((UIKit.UIImage?, Foundation.URL?) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var cancelBlock: (() -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) public var tipsLabel: UIKit.UILabel {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var bottomView: UIKit.UIView {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var largeCircleView: UIKit.UIVisualEffectView {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var smallCircleView: UIKit.UIView {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var animateLayer: QuartzCore.CAShapeLayer {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var retakeBtn: HHPhotoPicker.ZLEnlargeButton {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var doneBtn: UIKit.UIButton {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var dismissBtn: HHPhotoPicker.ZLEnlargeButton {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var switchCameraBtn: HHPhotoPicker.ZLEnlargeButton {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var focusCursorView: UIKit.UIImageView {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var takedImageView: UIKit.UIImageView {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var supportedInterfaceOrientations: UIKit.UIInterfaceOrientationMask {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var prefersStatusBarHidden: Swift.Bool {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @objc deinit
+  @objc dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewWillAppear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidAppear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewWillDisappear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidDisappear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLayoutSubviews()
+  @_Concurrency.MainActor(unsafe) @objc public func animationDidStop(_ anim: QuartzCore.CAAnimation, finished flag: Swift.Bool)
+}
+extension HHPhotoPicker.ZLCustomCamera : AVFoundation.AVCapturePhotoCaptureDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func photoOutput(_ output: AVFoundation.AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVFoundation.AVCaptureResolvedPhotoSettings)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func photoOutput(_ output: AVFoundation.AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CoreMedia.CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CoreMedia.CMSampleBuffer?, resolvedSettings: AVFoundation.AVCaptureResolvedPhotoSettings, bracketSettings: AVFoundation.AVCaptureBracketedStillImageSettings?, error: Swift.Error?)
+}
+extension HHPhotoPicker.ZLCustomCamera : AVFoundation.AVCaptureFileOutputRecordingDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func fileOutput(_ output: AVFoundation.AVCaptureFileOutput, didStartRecordingTo fileURL: Foundation.URL, from connections: [AVFoundation.AVCaptureConnection])
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func fileOutput(_ output: AVFoundation.AVCaptureFileOutput, didFinishRecordingTo outputFileURL: Foundation.URL, from connections: [AVFoundation.AVCaptureConnection], error: Swift.Error?)
+}
+extension HHPhotoPicker.ZLCustomCamera : UIKit.UIGestureRecognizerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func gestureRecognizer(_ gestureRecognizer: UIKit.UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIKit.UIGestureRecognizer) -> Swift.Bool
+}
+@objc public protocol ZLImageStickerContainerDelegate {
+  @objc var selectImageBlock: ((UIKit.UIImage) -> Swift.Void)? { get set }
+  @objc var hideBlock: (() -> Swift.Void)? { get set }
+  @objc func show(in view: UIKit.UIView)
+}
+@objc @_inheritsConvenienceInitializers public class ZLEditImageConfiguration : ObjectiveC.NSObject {
+  @objc public enum EditTool : Swift.Int, Swift.CaseIterable {
+    case draw
+    case clip
+    case imageSticker
+    case textSticker
+    case mosaic
+    case filter
+    case adjust
+    public init?(rawValue: Swift.Int)
+    public typealias AllCases = [HHPhotoPicker.ZLEditImageConfiguration.EditTool]
+    public typealias RawValue = Swift.Int
+    public static var allCases: [HHPhotoPicker.ZLEditImageConfiguration.EditTool] {
+      get
+    }
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public enum AdjustTool : Swift.Int, Swift.CaseIterable {
+    case brightness
+    case contrast
+    case saturation
+    public init?(rawValue: Swift.Int)
+    public typealias AllCases = [HHPhotoPicker.ZLEditImageConfiguration.AdjustTool]
+    public typealias RawValue = Swift.Int
+    public static var allCases: [HHPhotoPicker.ZLEditImageConfiguration.AdjustTool] {
+      get
+    }
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  public var tools: [HHPhotoPicker.ZLEditImageConfiguration.EditTool] {
+    get
+    set
+  }
+  @objc public var tools_objc: [Swift.Int] {
+    @objc get
+    @objc set
+  }
+  @objc public var drawColors: [UIKit.UIColor] {
+    @objc get
+    @objc set
+  }
+  @objc public var defaultDrawColor: UIKit.UIColor
+  @objc public var clipRatios: [HHPhotoPicker.ZLImageClipRatio] {
+    @objc get
+    @objc set
+  }
+  @objc public var textStickerTextColors: [UIKit.UIColor] {
+    @objc get
+    @objc set
+  }
+  @objc public var textStickerDefaultTextColor: UIKit.UIColor
+  @objc public var filters: [HHPhotoPicker.ZLFilter] {
+    @objc get
+    @objc set
+  }
+  @objc public var imageStickerContainerView: (UIKit.UIView & HHPhotoPicker.ZLImageStickerContainerDelegate)?
+  public var adjustTools: [HHPhotoPicker.ZLEditImageConfiguration.AdjustTool] {
+    get
+    set
+  }
+  @objc public var adjustTools_objc: [Swift.Int] {
+    @objc get
+    @objc set
+  }
+  @objc public var impactFeedbackWhenAdjustSliderValueIsZero: Swift.Bool
+  @objc public var impactFeedbackStyle: UIKit.UIImpactFeedbackGenerator.FeedbackStyle
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HHPhotoPicker.ZLEditImageConfiguration {
+  @discardableResult
+  public func tools(_ tools: [HHPhotoPicker.ZLEditImageConfiguration.EditTool]) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func drawColors(_ colors: [UIKit.UIColor]) -> HHPhotoPicker.ZLEditImageConfiguration
+  public func defaultDrawColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func clipRatios(_ ratios: [HHPhotoPicker.ZLImageClipRatio]) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func textStickerTextColors(_ colors: [UIKit.UIColor]) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func textStickerDefaultTextColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func filters(_ filters: [HHPhotoPicker.ZLFilter]) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func imageStickerContainerView(_ view: (UIKit.UIView & HHPhotoPicker.ZLImageStickerContainerDelegate)?) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func adjustTools(_ tools: [HHPhotoPicker.ZLEditImageConfiguration.AdjustTool]) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func impactFeedbackWhenAdjustSliderValueIsZero(_ value: Swift.Bool) -> HHPhotoPicker.ZLEditImageConfiguration
+  @discardableResult
+  public func impactFeedbackStyle(_ style: UIKit.UIImpactFeedbackGenerator.FeedbackStyle) -> HHPhotoPicker.ZLEditImageConfiguration
+}
+@objc public class ZLImageClipRatio : ObjectiveC.NSObject {
+  public var title: Swift.String
+  final public let whRatio: CoreGraphics.CGFloat
+  @objc public init(title: Swift.String, whRatio: CoreGraphics.CGFloat, isCircle: Swift.Bool = false)
+  @objc deinit
+}
+extension HHPhotoPicker.ZLImageClipRatio {
+  @objc public static let custom: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let circle: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh1x1: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh3x4: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh4x3: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh2x3: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh3x2: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh9x16: HHPhotoPicker.ZLImageClipRatio
+  @objc public static let wh16x9: HHPhotoPicker.ZLImageClipRatio
+}
+@objc public class ZLEditImageModel : ObjectiveC.NSObject {
+  final public let drawPaths: [HHPhotoPicker.ZLDrawPath]
+  final public let mosaicPaths: [HHPhotoPicker.ZLMosaicPath]
+  final public let editRect: CoreGraphics.CGRect?
+  final public let angle: CoreGraphics.CGFloat
+  final public let brightness: Swift.Float
+  final public let contrast: Swift.Float
+  final public let saturation: Swift.Float
+  final public let selectRatio: HHPhotoPicker.ZLImageClipRatio?
+  final public let selectFilter: HHPhotoPicker.ZLFilter?
+  final public let textStickers: [(state: HHPhotoPicker.ZLTextStickerState, index: Swift.Int)]?
+  final public let imageStickers: [(state: HHPhotoPicker.ZLImageStickerState, index: Swift.Int)]?
+  public init(drawPaths: [HHPhotoPicker.ZLDrawPath], mosaicPaths: [HHPhotoPicker.ZLMosaicPath], editRect: CoreGraphics.CGRect?, angle: CoreGraphics.CGFloat, brightness: Swift.Float, contrast: Swift.Float, saturation: Swift.Float, selectRatio: HHPhotoPicker.ZLImageClipRatio?, selectFilter: HHPhotoPicker.ZLFilter, textStickers: [(state: HHPhotoPicker.ZLTextStickerState, index: Swift.Int)]?, imageStickers: [(state: HHPhotoPicker.ZLImageStickerState, index: Swift.Int)]?)
+  @objc deinit
+}
+@objc @_Concurrency.MainActor(unsafe) open class ZLEditImageViewController : UIKit.UIViewController {
+  @objc @_Concurrency.MainActor(unsafe) public var drawColViewH: CoreGraphics.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) public var filterColViewH: CoreGraphics.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) public var adjustColViewH: CoreGraphics.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) public var ashbinNormalBgColor: UIKit.UIColor
+  @objc @_Concurrency.MainActor(unsafe) public var cancelBtn: HHPhotoPicker.ZLEnlargeButton {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var mainScrollView: UIKit.UIScrollView {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var topShadowView: UIKit.UIView {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var topShadowLayer: QuartzCore.CAGradientLayer {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var bottomShadowView: UIKit.UIView
+  @objc @_Concurrency.MainActor(unsafe) public var bottomShadowLayer: QuartzCore.CAGradientLayer
+  @objc @_Concurrency.MainActor(unsafe) public var doneBtn: UIKit.UIButton
+  @objc @_Concurrency.MainActor(unsafe) public var revokeBtn: UIKit.UIButton
+  @objc @_Concurrency.MainActor(unsafe) public var ashbinView: UIKit.UIView {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var ashbinImgView: UIKit.UIImageView {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var drawLineWidth: CoreGraphics.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) public var mosaicLineWidth: CoreGraphics.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) public var editFinishBlock: ((UIKit.UIImage, HHPhotoPicker.ZLEditImageModel?) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var cancelEditBlock: (() -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var prefersStatusBarHidden: Swift.Bool {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var supportedInterfaceOrientations: UIKit.UIInterfaceOrientationMask {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @objc deinit
+  @objc @_Concurrency.MainActor(unsafe) public class func showEditImageVC(parentVC: UIKit.UIViewController?, animate: Swift.Bool = false, image: UIKit.UIImage, editModel: HHPhotoPicker.ZLEditImageModel? = nil, cancel: (() -> Swift.Void)? = nil, completion: ((UIKit.UIImage, HHPhotoPicker.ZLEditImageModel?) -> Swift.Void)?)
+  @objc @_Concurrency.MainActor(unsafe) public init(image: UIKit.UIImage, editModel: HHPhotoPicker.ZLEditImageModel? = nil)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLayoutSubviews()
+}
+extension HHPhotoPicker.ZLEditImageViewController : UIKit.UIGestureRecognizerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIKit.UIGestureRecognizer) -> Swift.Bool
+}
+extension HHPhotoPicker.ZLEditImageViewController : UIKit.UIScrollViewDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func viewForZooming(in scrollView: UIKit.UIScrollView) -> UIKit.UIView?
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidZoom(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndZooming(_ scrollView: UIKit.UIScrollView, with view: UIKit.UIView?, atScale scale: CoreGraphics.CGFloat)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidScroll(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndDragging(_ scrollView: UIKit.UIScrollView, willDecelerate decelerate: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndDecelerating(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndScrollingAnimation(_ scrollView: UIKit.UIScrollView)
+}
+extension HHPhotoPicker.ZLEditImageViewController : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, didSelectItemAt indexPath: Foundation.IndexPath)
+}
+@objc @_hasMissingDesignatedInitializers public class ZLDrawPath : ObjectiveC.NSObject {
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers public class ZLMosaicPath : ObjectiveC.NSObject {
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) public class ZLEditVideoViewController : UIKit.UIViewController {
+  @objc @_Concurrency.MainActor(unsafe) public var editFinishBlock: ((Foundation.URL?) -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var prefersStatusBarHidden: Swift.Bool {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var supportedInterfaceOrientations: UIKit.UIInterfaceOrientationMask {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @objc deinit
+  @objc @_Concurrency.MainActor(unsafe) public init(avAsset: AVFoundation.AVAsset, animateDismiss: Swift.Bool = false)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidAppear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLayoutSubviews()
+}
+extension HHPhotoPicker.ZLEditVideoViewController : UIKit.UIGestureRecognizerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIKit.UIGestureRecognizer) -> Swift.Bool
+}
+extension HHPhotoPicker.ZLEditVideoViewController : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegateFlowLayout {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidScroll(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndDragging(_ scrollView: UIKit.UIScrollView, willDecelerate decelerate: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndDecelerating(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, insetForSectionAt section: Swift.Int) -> UIKit.UIEdgeInsets
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, willDisplay cell: UIKit.UICollectionViewCell, forItemAt indexPath: Foundation.IndexPath)
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class ZLEnlargeButton : UIKit.UIButton {
+  @_Concurrency.MainActor(unsafe) public var enlargeInsets: UIKit.UIEdgeInsets
+  @_Concurrency.MainActor(unsafe) public var enlargeInset: CoreGraphics.CGFloat {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func point(inside point: CoreGraphics.CGPoint, with event: UIKit.UIEvent?) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+public typealias ZLFilterApplierType = ((_ image: UIKit.UIImage) -> UIKit.UIImage)
+@objc public enum ZLFilterType : Swift.Int {
+  case normal
+  case chrome
+  case fade
+  case instant
+  case process
+  case transfer
+  case tone
+  case linear
+  case sepia
+  case mono
+  case noir
+  case tonal
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public class ZLFilter : ObjectiveC.NSObject {
+  public var name: Swift.String
+  @objc public init(name: Swift.String, filterType: HHPhotoPicker.ZLFilterType)
+  @objc public init(name: Swift.String, applier: HHPhotoPicker.ZLFilterApplierType?)
+  @objc deinit
+}
+extension HHPhotoPicker.ZLFilter {
+  @objc public static let all: [HHPhotoPicker.ZLFilter]
+  @objc public static let normal: HHPhotoPicker.ZLFilter
+  @objc public static let clarendon: HHPhotoPicker.ZLFilter
+  @objc public static let nashville: HHPhotoPicker.ZLFilter
+  @objc public static let apply1977: HHPhotoPicker.ZLFilter
+  @objc public static let toaster: HHPhotoPicker.ZLFilter
+  @objc public static let chrome: HHPhotoPicker.ZLFilter
+  @objc public static let fade: HHPhotoPicker.ZLFilter
+  @objc public static let instant: HHPhotoPicker.ZLFilter
+  @objc public static let process: HHPhotoPicker.ZLFilter
+  @objc public static let transfer: HHPhotoPicker.ZLFilter
+  @objc public static let tone: HHPhotoPicker.ZLFilter
+  @objc public static let linear: HHPhotoPicker.ZLFilter
+  @objc public static let sepia: HHPhotoPicker.ZLFilter
+  @objc public static let mono: HHPhotoPicker.ZLFilter
+  @objc public static let noir: HHPhotoPicker.ZLFilter
+  @objc public static let tonal: HHPhotoPicker.ZLFilter
+}
+@objc public enum ZLURLType : Swift.Int {
+  case image
+  case video
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) public class ZLImagePreviewController : UIKit.UIViewController {
+  @objc @_Concurrency.MainActor(unsafe) public var longPressBlock: ((HHPhotoPicker.ZLImagePreviewController?, UIKit.UIImage?, Swift.Int) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var doneBlock: (([Any]) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var videoHttpHeader: [Swift.String : Any]?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var prefersStatusBarHidden: Swift.Bool {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var preferredStatusBarStyle: UIKit.UIStatusBarStyle {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) public init(datas: [Any], index: Swift.Int = 0, showSelectBtn: Swift.Bool = true, showBottomView: Swift.Bool = true, urlType: ((Foundation.URL) -> HHPhotoPicker.ZLURLType)? = nil, urlImageLoader: ((Foundation.URL, UIKit.UIImageView, @escaping (CoreGraphics.CGFloat) -> Swift.Void, @escaping () -> Swift.Void) -> Swift.Void)? = nil)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewWillAppear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidAppear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLayoutSubviews()
+  @objc deinit
+}
+extension HHPhotoPicker.ZLImagePreviewController {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidScroll(_ scrollView: UIKit.UIScrollView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func scrollViewDidEndDecelerating(_ scrollView: UIKit.UIScrollView)
+}
+extension HHPhotoPicker.ZLImagePreviewController : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegateFlowLayout {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Swift.Int) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, minimumLineSpacingForSectionAt section: Swift.Int) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, insetForSectionAt section: Swift.Int) -> UIKit.UIEdgeInsets
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, sizeForItemAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGSize
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, didEndDisplaying cell: UIKit.UICollectionViewCell, forItemAt indexPath: Foundation.IndexPath)
+}
+@objc @_hasMissingDesignatedInitializers public class ZLImageStickerState : ObjectiveC.NSObject {
+  @objc deinit
+}
+@objc public enum ZLLanguageType : Swift.Int {
+  case system
+  case chineseSimplified
+  case chineseTraditional
+  case english
+  case japanese
+  case french
+  case german
+  case russian
+  case vietnamese
+  case korean
+  case malay
+  case italian
+  case indonesian
+  case portuguese
+  case spanish
+  case turkish
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct ZLLocalLanguageKey : Swift.Hashable {
+  public let rawValue: Swift.String
+  public init(rawValue: Swift.String)
+  public static let previewCamera: HHPhotoPicker.ZLLocalLanguageKey
+  public static let previewCameraRecord: HHPhotoPicker.ZLLocalLanguageKey
+  public static let previewAlbum: HHPhotoPicker.ZLLocalLanguageKey
+  public static let cancel: HHPhotoPicker.ZLLocalLanguageKey
+  public static let noPhotoTips: HHPhotoPicker.ZLLocalLanguageKey
+  public static let loading: HHPhotoPicker.ZLLocalLanguageKey
+  public static let hudLoading: HHPhotoPicker.ZLLocalLanguageKey
+  public static let done: HHPhotoPicker.ZLLocalLanguageKey
+  public static let ok: HHPhotoPicker.ZLLocalLanguageKey
+  public static let timeout: HHPhotoPicker.ZLLocalLanguageKey
+  public static let noPhotoLibratyAuthority: HHPhotoPicker.ZLLocalLanguageKey
+  public static let noCameraAuthority: HHPhotoPicker.ZLLocalLanguageKey
+  public static let noMicrophoneAuthority: HHPhotoPicker.ZLLocalLanguageKey
+  public static let cameraUnavailable: HHPhotoPicker.ZLLocalLanguageKey
+  public static let keepRecording: HHPhotoPicker.ZLLocalLanguageKey
+  public static let gotoSettings: HHPhotoPicker.ZLLocalLanguageKey
+  public static let photo: HHPhotoPicker.ZLLocalLanguageKey
+  public static let originalPhoto: HHPhotoPicker.ZLLocalLanguageKey
+  public static let back: HHPhotoPicker.ZLLocalLanguageKey
+  public static let edit: HHPhotoPicker.ZLLocalLanguageKey
+  public static let editFinish: HHPhotoPicker.ZLLocalLanguageKey
+  public static let revert: HHPhotoPicker.ZLLocalLanguageKey
+  public static let brightness: HHPhotoPicker.ZLLocalLanguageKey
+  public static let contrast: HHPhotoPicker.ZLLocalLanguageKey
+  public static let saturation: HHPhotoPicker.ZLLocalLanguageKey
+  public static let preview: HHPhotoPicker.ZLLocalLanguageKey
+  public static let notAllowMixSelect: HHPhotoPicker.ZLLocalLanguageKey
+  public static let save: HHPhotoPicker.ZLLocalLanguageKey
+  public static let saveImageError: HHPhotoPicker.ZLLocalLanguageKey
+  public static let saveVideoError: HHPhotoPicker.ZLLocalLanguageKey
+  public static let exceededMaxSelectCount: HHPhotoPicker.ZLLocalLanguageKey
+  public static let exceededMaxVideoSelectCount: HHPhotoPicker.ZLLocalLanguageKey
+  public static let lessThanMinVideoSelectCount: HHPhotoPicker.ZLLocalLanguageKey
+  public static let longerThanMaxVideoDuration: HHPhotoPicker.ZLLocalLanguageKey
+  public static let shorterThanMaxVideoDuration: HHPhotoPicker.ZLLocalLanguageKey
+  public static let iCloudVideoLoadFaild: HHPhotoPicker.ZLLocalLanguageKey
+  public static let imageLoadFailed: HHPhotoPicker.ZLLocalLanguageKey
+  public static let customCameraTips: HHPhotoPicker.ZLLocalLanguageKey
+  public static let customCameraTakePhotoTips: HHPhotoPicker.ZLLocalLanguageKey
+  public static let customCameraRecordVideoTips: HHPhotoPicker.ZLLocalLanguageKey
+  public static let minRecordTimeTips: HHPhotoPicker.ZLLocalLanguageKey
+  public static let cameraRoll: HHPhotoPicker.ZLLocalLanguageKey
+  public static let panoramas: HHPhotoPicker.ZLLocalLanguageKey
+  public static let videos: HHPhotoPicker.ZLLocalLanguageKey
+  public static let favorites: HHPhotoPicker.ZLLocalLanguageKey
+  public static let timelapses: HHPhotoPicker.ZLLocalLanguageKey
+  public static let recentlyAdded: HHPhotoPicker.ZLLocalLanguageKey
+  public static let bursts: HHPhotoPicker.ZLLocalLanguageKey
+  public static let slomoVideos: HHPhotoPicker.ZLLocalLanguageKey
+  public static let selfPortraits: HHPhotoPicker.ZLLocalLanguageKey
+  public static let screenshots: HHPhotoPicker.ZLLocalLanguageKey
+  public static let depthEffect: HHPhotoPicker.ZLLocalLanguageKey
+  public static let livePhotos: HHPhotoPicker.ZLLocalLanguageKey
+  public static let animated: HHPhotoPicker.ZLLocalLanguageKey
+  public static let myPhotoStream: HHPhotoPicker.ZLLocalLanguageKey
+  public static let noTitleAlbumListPlaceholder: HHPhotoPicker.ZLLocalLanguageKey
+  public static let unableToAccessAllPhotos: HHPhotoPicker.ZLLocalLanguageKey
+  public static let textStickerRemoveTips: HHPhotoPicker.ZLLocalLanguageKey
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: HHPhotoPicker.ZLLocalLanguageKey, b: HHPhotoPicker.ZLLocalLanguageKey) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public typealias Second = Swift.Int
+@objc @_inheritsConvenienceInitializers public class ZLPhotoConfiguration : ObjectiveC.NSObject {
+  @objc public class func `default`() -> HHPhotoPicker.ZLPhotoConfiguration
+  @objc public class func resetConfiguration()
+  @objc public var sortAscending: Swift.Bool
+  @objc public var maxSelectCount: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc public var maxVideoSelectCount: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc public var minVideoSelectCount: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc public var allowMixSelect: Swift.Bool
+  @objc public var maxPreviewCount: Swift.Int
+  @objc public var cellCornerRadio: CoreGraphics.CGFloat
+  @objc public var allowSelectImage: Swift.Bool
+  @objc public var allowSelectVideo: Swift.Bool
+  @objc public var allowSelectGif: Swift.Bool
+  @objc public var allowSelectLivePhoto: Swift.Bool
+  @objc public var allowTakePhotoInLibrary: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var allowEditImage: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var allowEditVideo: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var animateSelectBtnWhenSelect: Swift.Bool
+  @objc public var selectBtnAnimationDuration: Swift.Double
+  @objc public var editAfterSelectThumbnailImage: Swift.Bool
+  @objc public var cropVideoAfterSelectThumbnail: Swift.Bool
+  @objc public var showClipDirectlyIfOnlyHasClipTool: Swift.Bool
+  @objc public var saveNewImageAfterEdit: Swift.Bool
+  @objc public var allowSlideSelect: Swift.Bool
+  @objc public var autoScrollWhenSlideSelectIsActive: Swift.Bool
+  @objc public var autoScrollMaxSpeed: CoreGraphics.CGFloat
+  @objc public var allowDragSelect: Swift.Bool
+  @objc public var allowSelectOriginal: Swift.Bool
+  @objc public var allowPreviewPhotos: Swift.Bool
+  @objc public var showPreviewButtonInAlbum: Swift.Bool
+  @objc public var showSelectCountOnDoneBtn: Swift.Bool
+  @objc public var columnCount: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc public var maxEditVideoTime: Swift.Int
+  @objc public var maxSelectVideoDuration: Swift.Int
+  @objc public var minSelectVideoDuration: Swift.Int
+  @objc public var editImageConfiguration: HHPhotoPicker.ZLEditImageConfiguration
+  @objc public var showCaptureImageOnTakePhotoBtn: Swift.Bool
+  @objc public var showSelectBtnWhenSingleSelect: Swift.Bool
+  @objc public var showSelectedMask: Swift.Bool
+  @objc public var showSelectedBorder: Swift.Bool
+  @objc public var showInvalidMask: Swift.Bool
+  @objc public var showSelectedIndex: Swift.Bool
+  @objc public var showSelectedPhotoPreview: Swift.Bool
+  @objc public var shouldAnialysisAsset: Swift.Bool
+  @objc public var timeout: Swift.Double
+  @objc public var languageType: HHPhotoPicker.ZLLanguageType {
+    @objc get
+    @objc set
+  }
+  @objc public var useCustomCamera: Swift.Bool
+  @objc public var allowTakePhoto: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var allowRecordVideo: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var minRecordDuration: HHPhotoPicker.Second {
+    @objc get
+    @objc set
+  }
+  @objc public var maxRecordDuration: HHPhotoPicker.Second {
+    @objc get
+    @objc set
+  }
+  @objc public var cameraConfiguration: HHPhotoPicker.ZLCameraConfiguration
+  @objc public var hudStyle: HHPhotoPicker.ZLProgressHUD.HUDStyle
+  @objc public var canSelectAsset: ((Photos.PHAsset) -> Swift.Bool)?
+  @objc public var showAddPhotoButton: Swift.Bool
+  @objc public var showEnterSettingTips: Swift.Bool
+  @objc public var noAuthorityCallback: ((HHPhotoPicker.ZLNoAuthorityType) -> Swift.Void)?
+  @objc public var operateBeforeDoneAction: ((UIKit.UIViewController, @escaping () -> Swift.Void) -> Swift.Void)?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum ZLNoAuthorityType : Swift.Int {
+  case library
+  case camera
+  case microphone
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension HHPhotoPicker.ZLPhotoConfiguration {
+  @discardableResult
+  public func sortAscending(_ ascending: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxSelectCount(_ count: Swift.Int) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxVideoSelectCount(_ count: Swift.Int) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func minVideoSelectCount(_ count: Swift.Int) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowMixSelect(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxPreviewCount(_ count: Swift.Int) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func cellCornerRadio(_ cornerRadio: CoreGraphics.CGFloat) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowSelectImage(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func allowSelectVideo(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowSelectGif(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowSelectLivePhoto(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowTakePhotoInLibrary(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowEditImage(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowEditVideo(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func animateSelectBtnWhenSelect(_ animate: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func selectBtnAnimationDuration(_ duration: CoreFoundation.CFTimeInterval) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func editAfterSelectThumbnailImage(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func cropVideoAfterSelectThumbnail(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showClipDirectlyIfOnlyHasClipTool(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func saveNewImageAfterEdit(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowSlideSelect(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func autoScrollWhenSlideSelectIsActive(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func autoScrollMaxSpeed(_ speed: CoreGraphics.CGFloat) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowDragSelect(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowSelectOriginal(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowPreviewPhotos(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showPreviewButtonInAlbum(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectCountOnDoneBtn(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func columnCount(_ count: Swift.Int) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxEditVideoTime(_ second: HHPhotoPicker.Second) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxSelectVideoDuration(_ duration: HHPhotoPicker.Second) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func minSelectVideoDuration(_ duration: HHPhotoPicker.Second) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func editImageConfiguration(_ configuration: HHPhotoPicker.ZLEditImageConfiguration) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showCaptureImageOnTakePhotoBtn(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectBtnWhenSingleSelect(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectedMask(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectedBorder(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showInvalidMask(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectedIndex(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func showSelectedPhotoPreview(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func shouldAnialysisAsset(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func timeout(_ timeout: Foundation.TimeInterval) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func languageType(_ type: HHPhotoPicker.ZLLanguageType) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func useCustomCamera(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowTakePhoto(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func allowRecordVideo(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func minRecordDuration(_ duration: HHPhotoPicker.Second) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func maxRecordDuration(_ duration: HHPhotoPicker.Second) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func cameraConfiguration(_ configuration: HHPhotoPicker.ZLCameraConfiguration) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  public func hudStyle(_ style: HHPhotoPicker.ZLProgressHUD.HUDStyle) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func canSelectAsset(_ block: ((Photos.PHAsset) -> Swift.Bool)?) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func showAddPhotoButton(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func showEnterSettingTips(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func noAuthorityCallback(_ callback: ((HHPhotoPicker.ZLNoAuthorityType) -> Swift.Void)?) -> HHPhotoPicker.ZLPhotoConfiguration
+  @discardableResult
+  @objc dynamic public func operateBeforeDoneAction(_ block: ((UIKit.UIViewController, @escaping () -> Swift.Void) -> Swift.Void)?) -> HHPhotoPicker.ZLPhotoConfiguration
+}
+@objc @_inheritsConvenienceInitializers public class ZLPhotoManager : ObjectiveC.NSObject {
+  @objc public class func saveImageToAlbum(image: UIKit.UIImage, completion: ((Swift.Bool, Photos.PHAsset?) -> Swift.Void)?)
+  @objc public class func saveVideoToAlbum(url: Foundation.URL, completion: ((Swift.Bool, Photos.PHAsset?) -> Swift.Void)?)
+  @objc public class func fetchPhoto(in result: Photos.PHFetchResult<Photos.PHAsset>, ascending: Swift.Bool, allowSelectImage: Swift.Bool, allowSelectVideo: Swift.Bool, limitCount: Swift.Int = .max) -> [HHPhotoPicker.ZLPhotoModel]
+  @objc public class func getPhotoAlbumList(ascending: Swift.Bool, allowSelectImage: Swift.Bool, allowSelectVideo: Swift.Bool, completion: ([HHPhotoPicker.ZLAlbumListModel]) -> Swift.Void)
+  @objc public class func getCameraRollAlbum(allowSelectImage: Swift.Bool, allowSelectVideo: Swift.Bool, completion: @escaping (HHPhotoPicker.ZLAlbumListModel) -> Swift.Void)
+  @discardableResult
+  @objc public class func fetchImage(for asset: Photos.PHAsset, size: CoreGraphics.CGSize, progress: ((CoreGraphics.CGFloat, Swift.Error?, Swift.UnsafeMutablePointer<ObjectiveC.ObjCBool>, [Swift.AnyHashable : Any]?) -> Swift.Void)? = nil, completion: @escaping (UIKit.UIImage?, Swift.Bool) -> Swift.Void) -> Photos.PHImageRequestID
+  @discardableResult
+  @objc public class func fetchOriginalImage(for asset: Photos.PHAsset, progress: ((CoreGraphics.CGFloat, Swift.Error?, Swift.UnsafeMutablePointer<ObjectiveC.ObjCBool>, [Swift.AnyHashable : Any]?) -> Swift.Void)? = nil, completion: @escaping (UIKit.UIImage?, Swift.Bool) -> Swift.Void) -> Photos.PHImageRequestID
+  @discardableResult
+  @objc public class func fetchOriginalImageData(for asset: Photos.PHAsset, progress: ((CoreGraphics.CGFloat, Swift.Error?, Swift.UnsafeMutablePointer<ObjectiveC.ObjCBool>, [Swift.AnyHashable : Any]?) -> Swift.Void)? = nil, completion: @escaping (Foundation.Data, [Swift.AnyHashable : Any]?, Swift.Bool) -> Swift.Void) -> Photos.PHImageRequestID
+  @objc public class func fetchLivePhoto(for asset: Photos.PHAsset, completion: @escaping (Photos.PHLivePhoto?, [Swift.AnyHashable : Any]?, Swift.Bool) -> Swift.Void) -> Photos.PHImageRequestID
+  @objc public class func fetchVideo(for asset: Photos.PHAsset, progress: ((CoreGraphics.CGFloat, Swift.Error?, Swift.UnsafeMutablePointer<ObjectiveC.ObjCBool>, [Swift.AnyHashable : Any]?) -> Swift.Void)? = nil, completion: @escaping (AVFoundation.AVPlayerItem?, [Swift.AnyHashable : Any]?, Swift.Bool) -> Swift.Void) -> Photos.PHImageRequestID
+  @objc public class func fetchAVAsset(forVideo asset: Photos.PHAsset, completion: @escaping (AVFoundation.AVAsset?, [Swift.AnyHashable : Any]?) -> Swift.Void) -> Photos.PHImageRequestID
+  @objc public class func fetchAssetFilePath(asset: Photos.PHAsset, completion: @escaping (Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HHPhotoPicker.ZLPhotoManager {
+  @objc dynamic public class func hasPhotoLibratyAuthority() -> Swift.Bool
+  @objc dynamic public class func hasCameraAuthority() -> Swift.Bool
+  @objc dynamic public class func hasMicrophoneAuthority() -> Swift.Bool
+}
+extension HHPhotoPicker.ZLPhotoModel {
+  public enum MediaType : Swift.Int {
+    case unknown
+    case image
+    case gif
+    case livePhoto
+    case video
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+}
+@objc public class ZLPhotoModel : ObjectiveC.NSObject {
+  final public let ident: Swift.String
+  final public let asset: Photos.PHAsset
+  public var type: HHPhotoPicker.ZLPhotoModel.MediaType
+  public var duration: Swift.String
+  public var isSelected: Swift.Bool
+  public var editImage: UIKit.UIImage? {
+    get
+    set
+  }
+  public var second: HHPhotoPicker.Second {
+    get
+  }
+  public var whRatio: CoreGraphics.CGFloat {
+    get
+  }
+  public var previewSize: CoreGraphics.CGSize {
+    get
+  }
+  public var editImageModel: HHPhotoPicker.ZLEditImageModel?
+  public init(asset: Photos.PHAsset)
+  public func transformAssetType(for asset: Photos.PHAsset) -> HHPhotoPicker.ZLPhotoModel.MediaType
+  public func transformDuration(for asset: Photos.PHAsset) -> Swift.String
+  @objc deinit
+}
+extension HHPhotoPicker.ZLPhotoModel {
+  public static func == (lhs: HHPhotoPicker.ZLPhotoModel, rhs: HHPhotoPicker.ZLPhotoModel) -> Swift.Bool
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class ZLPhotoPreviewSheet : UIKit.UIView {
+  @objc @_Concurrency.MainActor(unsafe) public var selectImageBlock: (([UIKit.UIImage], [Photos.PHAsset], Swift.Bool) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var selectImageRequestErrorBlock: (([Photos.PHAsset], [Swift.Int]) -> Swift.Void)?
+  @objc @_Concurrency.MainActor(unsafe) public var cancelBlock: (() -> Swift.Void)?
+  @objc deinit
+  @_Concurrency.MainActor(unsafe) @objc convenience override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc @_Concurrency.MainActor(unsafe) public init(selectedAssets: [Photos.PHAsset]? = nil)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func layoutSubviews()
+  @objc @_Concurrency.MainActor(unsafe) public func showPreview(animate: Swift.Bool = true, sender: UIKit.UIViewController)
+  @objc @_Concurrency.MainActor(unsafe) public func showPhotoLibrary(sender: UIKit.UIViewController)
+  @objc @_Concurrency.MainActor(unsafe) public func previewAssets(sender: UIKit.UIViewController, assets: [Photos.PHAsset], index: Swift.Int, isOriginal: Swift.Bool, showBottomViewAndSelectBtn: Swift.Bool = true)
+}
+extension HHPhotoPicker.ZLPhotoPreviewSheet : UIKit.UIGestureRecognizerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIKit.UIGestureRecognizer) -> Swift.Bool
+}
+extension HHPhotoPicker.ZLPhotoPreviewSheet : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegateFlowLayout {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, sizeForItemAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGSize
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, willDisplay cell: UIKit.UICollectionViewCell, forItemAt indexPath: Foundation.IndexPath)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, didSelectItemAt indexPath: Foundation.IndexPath)
+}
+extension HHPhotoPicker.ZLPhotoPreviewSheet : UIKit.UIImagePickerControllerDelegate, UIKit.UINavigationControllerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func imagePickerController(_ picker: UIKit.UIImagePickerController, didFinishPickingMediaWithInfo info: [UIKit.UIImagePickerController.InfoKey : Any])
+}
+extension HHPhotoPicker.ZLPhotoPreviewSheet : Photos.PHPhotoLibraryChangeObserver {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func photoLibraryDidChange(_ changeInstance: Photos.PHChange)
+}
+@objc @_inheritsConvenienceInitializers public class ZLPhotoUIConfiguration : ObjectiveC.NSObject {
+  @objc public enum CancelButtonStyle : Swift.Int {
+    case text
+    case image
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public class func `default`() -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @objc public class func resetConfiguration()
+  @objc public var style: HHPhotoPicker.ZLPhotoBrowserStyle
+  @objc public var statusBarStyle: UIKit.UIStatusBarStyle
+  @objc public var navCancelButtonStyle: HHPhotoPicker.ZLPhotoUIConfiguration.CancelButtonStyle
+  @objc public var showStatusBarInPreviewInterface: Swift.Bool
+  @objc public var navViewBlurEffectOfAlbumList: UIKit.UIBlurEffect?
+  @objc public var navViewBlurEffectOfPreview: UIKit.UIBlurEffect?
+  @objc public var bottomViewBlurEffectOfAlbumList: UIKit.UIBlurEffect?
+  @objc public var bottomViewBlurEffectOfPreview: UIKit.UIBlurEffect?
+  @objc public var customImageNames: [Swift.String] {
+    @objc get
+    @objc set
+  }
+  public var customImageForKey: [Swift.String : UIKit.UIImage?] {
+    get
+    set
+  }
+  @objc public var customImageForKey_objc: [Swift.String : UIKit.UIImage] {
+    @objc get
+    @objc set
+  }
+  public var customLanguageKeyValue: [HHPhotoPicker.ZLLocalLanguageKey : Swift.String] {
+    get
+    set
+  }
+  @objc public var customLanguageKeyValue_objc: [Swift.String : Swift.String] {
+    @objc get
+    @objc set
+  }
+  @objc public var themeFontName: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc public var sheetTranslucentColor: UIKit.UIColor
+  @objc public var sheetBtnBgColor: UIKit.UIColor
+  @objc public var sheetBtnTitleColor: UIKit.UIColor
+  @objc public var sheetBtnTitleTintColor: UIKit.UIColor
+  @objc public var navBarColor: UIKit.UIColor
+  @objc public var navBarColorOfPreviewVC: UIKit.UIColor
+  @objc public var navTitleColor: UIKit.UIColor
+  @objc public var navTitleColorOfPreviewVC: UIKit.UIColor
+  @objc public var navEmbedTitleViewBgColor: UIKit.UIColor
+  @objc public var albumListBgColor: UIKit.UIColor
+  @objc public var embedAlbumListTranslucentColor: UIKit.UIColor
+  @objc public var albumListTitleColor: UIKit.UIColor
+  @objc public var albumListCountColor: UIKit.UIColor
+  @objc public var separatorColor: UIKit.UIColor
+  @objc public var thumbnailBgColor: UIKit.UIColor
+  @objc public var previewVCBgColor: UIKit.UIColor
+  @objc public var bottomToolViewBgColor: UIKit.UIColor
+  @objc public var bottomToolViewBgColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewBtnNormalTitleColor: UIKit.UIColor
+  @objc public var bottomToolViewDoneBtnNormalTitleColor: UIKit.UIColor
+  @objc public var bottomToolViewBtnNormalTitleColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewDoneBtnNormalTitleColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewBtnDisableTitleColor: UIKit.UIColor
+  @objc public var bottomToolViewDoneBtnDisableTitleColor: UIKit.UIColor
+  @objc public var bottomToolViewBtnDisableTitleColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewDoneBtnDisableTitleColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewBtnNormalBgColor: UIKit.UIColor
+  @objc public var bottomToolViewBtnNormalBgColorOfPreviewVC: UIKit.UIColor
+  @objc public var bottomToolViewBtnDisableBgColor: UIKit.UIColor
+  @objc public var bottomToolViewBtnDisableBgColorOfPreviewVC: UIKit.UIColor
+  @objc public var selectMorePhotoWhenAuthIsLismitedTitleColor: UIKit.UIColor
+  @objc public var cameraRecodeProgressColor: UIKit.UIColor
+  @objc public var selectedMaskColor: UIKit.UIColor
+  @objc public var selectedBorderColor: UIKit.UIColor
+  @objc public var invalidMaskColor: UIKit.UIColor
+  @objc public var indexLabelTextColor: UIKit.UIColor
+  @objc public var indexLabelBgColor: UIKit.UIColor
+  @objc public var cameraCellBgColor: UIKit.UIColor
+  @objc public var adjustSliderNormalColor: UIKit.UIColor
+  @objc public var adjustSliderTintColor: UIKit.UIColor
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum ZLPhotoBrowserStyle : Swift.Int {
+  case embedAlbumList
+  case externalAlbumList
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension HHPhotoPicker.ZLPhotoUIConfiguration {
+  @discardableResult
+  public func style(_ style: HHPhotoPicker.ZLPhotoBrowserStyle) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func statusBarStyle(_ statusBarStyle: UIKit.UIStatusBarStyle) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navCancelButtonStyle(_ style: HHPhotoPicker.ZLPhotoUIConfiguration.CancelButtonStyle) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func showStatusBarInPreviewInterface(_ value: Swift.Bool) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navViewBlurEffectOfAlbumList(_ effect: UIKit.UIBlurEffect?) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navViewBlurEffectOfPreview(_ effect: UIKit.UIBlurEffect?) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomViewBlurEffectOfAlbumList(_ effect: UIKit.UIBlurEffect?) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomViewBlurEffectOfPreview(_ effect: UIKit.UIBlurEffect?) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func customImageNames(_ names: [Swift.String]) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func customImageForKey(_ map: [Swift.String : UIKit.UIImage?]) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func customLanguageKeyValue(_ map: [HHPhotoPicker.ZLLocalLanguageKey : Swift.String]) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func themeFontName(_ name: Swift.String) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func sheetTranslucentColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func sheetBtnBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func sheetBtnTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func sheetBtnTitleTintColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navBarColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navBarColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navTitleColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func navEmbedTitleViewBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func albumListBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func embedAlbumListTranslucentColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func albumListTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func albumListCountColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func separatorColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func thumbnailBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func previewVCBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBgColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnNormalTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewDoneBtnNormalTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnNormalTitleColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewDoneBtnNormalTitleColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnDisableTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewDoneBtnDisableTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnDisableTitleColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewDoneBtnDisableTitleColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnNormalBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnNormalBgColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnDisableBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func bottomToolViewBtnDisableBgColorOfPreviewVC(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func selectMorePhotoWhenAuthIsLismitedTitleColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func cameraRecodeProgressColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func selectedMaskColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func selectedBorderColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func invalidMaskColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func indexLabelTextColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func indexLabelBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func cameraCellBgColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func adjustSliderNormalColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+  @discardableResult
+  public func adjustSliderTintColor(_ color: UIKit.UIColor) -> HHPhotoPicker.ZLPhotoUIConfiguration
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) public class ZLProgressHUD : UIKit.UIView {
+  @objc public enum HUDStyle : Swift.Int {
+    case light
+    case lightBlur
+    case dark
+    case darkBlur
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc deinit
+  @objc @_Concurrency.MainActor(unsafe) public init(style: HHPhotoPicker.ZLProgressHUD.HUDStyle)
+  @objc @_Concurrency.MainActor(unsafe) public func show(timeout: Foundation.TimeInterval = 100)
+  @objc @_Concurrency.MainActor(unsafe) public func hide()
+}
+@objc @_hasMissingDesignatedInitializers public class ZLTextStickerState : ObjectiveC.NSObject {
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class ZLVideoManager : ObjectiveC.NSObject {
+  @objc public class func mergeVideos(fileUrls: [Foundation.URL], completion: @escaping ((Foundation.URL?, Swift.Error?) -> Swift.Void))
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HHPhotoPicker.ZLVideoManager {
+  @objc dynamic public class func exportVideo(for asset: Photos.PHAsset, exportType: HHPhotoPicker.ZLVideoManager.ExportType = .mov, presetName: Swift.String = AVAssetExportPresetMediumQuality, complete: @escaping ((Foundation.URL?, Swift.Error?) -> Swift.Void))
+  @objc dynamic public class func exportVideo(for asset: AVFoundation.AVAsset, range: CoreMedia.CMTimeRange = CMTimeRange(start: .zero, duration: .positiveInfinity), exportType: HHPhotoPicker.ZLVideoManager.ExportType = .mov, presetName: Swift.String = AVAssetExportPresetMediumQuality, complete: @escaping ((Foundation.URL?, Swift.Error?) -> Swift.Void))
+}
+extension HHPhotoPicker.ZLVideoManager {
+  @objc public enum ExportType : Swift.Int {
+    case mov
+    case mp4
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+}
+extension HHPhotoPicker.ZLCameraConfiguration.CaptureSessionPreset : Swift.Equatable {}
+extension HHPhotoPicker.ZLCameraConfiguration.CaptureSessionPreset : Swift.Hashable {}
+extension HHPhotoPicker.ZLCameraConfiguration.CaptureSessionPreset : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FocusMode : Swift.Equatable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FocusMode : Swift.Hashable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FocusMode : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLCameraConfiguration.ExposureMode : Swift.Equatable {}
+extension HHPhotoPicker.ZLCameraConfiguration.ExposureMode : Swift.Hashable {}
+extension HHPhotoPicker.ZLCameraConfiguration.ExposureMode : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FlashMode : Swift.Equatable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FlashMode : Swift.Hashable {}
+extension HHPhotoPicker.ZLCameraConfiguration.FlashMode : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLCameraConfiguration.VideoExportType : Swift.Equatable {}
+extension HHPhotoPicker.ZLCameraConfiguration.VideoExportType : Swift.Hashable {}
+extension HHPhotoPicker.ZLCameraConfiguration.VideoExportType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.EditTool : Swift.Equatable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.EditTool : Swift.Hashable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.EditTool : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.AdjustTool : Swift.Equatable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.AdjustTool : Swift.Hashable {}
+extension HHPhotoPicker.ZLEditImageConfiguration.AdjustTool : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLFilterType : Swift.Equatable {}
+extension HHPhotoPicker.ZLFilterType : Swift.Hashable {}
+extension HHPhotoPicker.ZLFilterType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLURLType : Swift.Equatable {}
+extension HHPhotoPicker.ZLURLType : Swift.Hashable {}
+extension HHPhotoPicker.ZLURLType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLLanguageType : Swift.Equatable {}
+extension HHPhotoPicker.ZLLanguageType : Swift.Hashable {}
+extension HHPhotoPicker.ZLLanguageType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLNoAuthorityType : Swift.Equatable {}
+extension HHPhotoPicker.ZLNoAuthorityType : Swift.Hashable {}
+extension HHPhotoPicker.ZLNoAuthorityType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLPhotoModel.MediaType : Swift.Equatable {}
+extension HHPhotoPicker.ZLPhotoModel.MediaType : Swift.Hashable {}
+extension HHPhotoPicker.ZLPhotoModel.MediaType : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLPhotoUIConfiguration.CancelButtonStyle : Swift.Equatable {}
+extension HHPhotoPicker.ZLPhotoUIConfiguration.CancelButtonStyle : Swift.Hashable {}
+extension HHPhotoPicker.ZLPhotoUIConfiguration.CancelButtonStyle : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLPhotoBrowserStyle : Swift.Equatable {}
+extension HHPhotoPicker.ZLPhotoBrowserStyle : Swift.Hashable {}
+extension HHPhotoPicker.ZLPhotoBrowserStyle : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLProgressHUD.HUDStyle : Swift.Equatable {}
+extension HHPhotoPicker.ZLProgressHUD.HUDStyle : Swift.Hashable {}
+extension HHPhotoPicker.ZLProgressHUD.HUDStyle : Swift.RawRepresentable {}
+extension HHPhotoPicker.ZLVideoManager.ExportType : Swift.Equatable {}
+extension HHPhotoPicker.ZLVideoManager.ExportType : Swift.Hashable {}
+extension HHPhotoPicker.ZLVideoManager.ExportType : Swift.RawRepresentable {}
