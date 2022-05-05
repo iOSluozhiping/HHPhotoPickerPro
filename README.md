@@ -1,7 +1,7 @@
 # 和缓最新相册选择器接入文档
 
 # 1,使用pod方式集成：
-    pod "HHPhotoPickerPro"
+    pod "HHPhotoPickerPro_github"
     
 # 2,导入头文件
     import HHPhotoPicker
